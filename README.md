@@ -6,7 +6,7 @@
 python3 --version
 ```
 ```
-
+pypy --version
 ```
 Ответ не должен содержать сообщения об ошибке. В обратном случае, [гугл](https://www.google.com/search?q=how+to+install+pypy) вам в помощь.
 ## Скрипты
