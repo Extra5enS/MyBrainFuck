@@ -27,3 +27,8 @@ opt_jit_pypy:
 	mkdir -p build
 	$(PYPY) $(RPYTHON) --opt=jit $(SOURCE)/opt_jit_pypy.py
 	mv -f opt_jit_pypy-c build 	
+
+log_jit_pypy:	
+	mkdir -p build
+	$(PYPY) $(RPYTHON) --opt=jit $(SOURCE)/log_jit_pypy.py
+	mv -f log_jit_pypy-c build
