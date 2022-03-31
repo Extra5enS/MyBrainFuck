@@ -74,6 +74,7 @@ export PYPYLOG=jit-log-opt:logfile
 далее запускаем программу, тут мы будем пользоваться тестовой маленькой программой 
 ```
 cd build
-./log_jit_pypy ../brainfuck/bench.b
+./log_jit_pypy-c ../brainfuck/bench.b
 cat logfile
 ```
+Теперь мы можем анализировать результат работы программы с логами
