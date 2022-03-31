@@ -10,7 +10,7 @@ APT=apt
 python_only:
 	$(PYTHON) $(SOURCE)/python_only.py $(CODE)/first_brainfuck.b
 
-pypy_rpython:
+insatll_pypy_rpython:
 	hg clone $(PYPY_SOURCE_REPO) pypy
 
 simple_pypy:
@@ -24,3 +24,6 @@ jit_pypy:
 	mv -f jit_pypy-c build 	
 
 opt_jit_pyp:	
+	mkdir -p build
+	$(PYPY) $(RPYTHON) --opt=jit $(SOURCE)/opt_jit_pypy.py
+	mv -f opt_jit_pypy-c build 	
