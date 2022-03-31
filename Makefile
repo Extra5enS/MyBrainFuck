@@ -10,7 +10,7 @@ APT=apt
 python_only:
 	$(PYTHON) $(SOURCE)/python_only.py $(CODE)/first_brainfuck.b
 
-insatll_pypy_rpython:
+install_pypy_rpython:
 	hg clone $(PYPY_SOURCE_REPO) pypy
 
 simple_pypy:
