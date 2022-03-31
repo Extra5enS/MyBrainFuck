@@ -1,2 +1,3 @@
 /pypy
 /build
+/source/__pycache__

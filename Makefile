@@ -2,16 +2,25 @@ PYTHON=python3
 PYPY=pypy
 SOURCE=source
 CODE=brainfuck
-TRANSLETOR_STORE_LINK=https://foss.heptapod.net/pypy/pypy
+PYPY_SOURCE_REPO=https://foss.heptapod.net/pypy/pypy
 TRANSLETOR_PATH=pypy/rpython/translator/goal
-
+RPYTHON=pypy/rpython/bin/rpython
+APT=apt
 
 python_only:
 	$(PYTHON) $(SOURCE)/python_only.py $(CODE)/first_brainfuck.b
 
-install_transletor:
-	hg clone $(TRANSLETOR_STORE_LINK)
+pypy_rpython:
+	hg clone $(PYPY_SOURCE_REPO) pypy
 
 simple_pypy:
-	$(PYPY) $(TRANSLETOR_PATH)/translate.py $(SOURCE)/simple_pypy.py
-	
+	mkdir -p build
+	$(PYPY) $(RPYTHON) --opt=2 $(SOURCE)/simple_pypy.py
+	mv -f simple_pypy-c build 	
+
+jit_pypy:
+	mkdir -p build
+	$(PYPY) $(RPYTHON) --opt=jit $(SOURCE)/jit_pypy.py
+	mv -f jit_pypy-c build 	
+
+opt_jit_pyp:	

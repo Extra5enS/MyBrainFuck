@@ -2,11 +2,24 @@
 import os
 import sys
 
+try:
+    from rpython.rlib.jit import JitDriver
+except ImportError:
+    class JitDriver(object):
+        def __init__(self,**kw): pass
+        def jit_merge_point(self,**kw): pass
+        def can_enter_jit(self,**kw): pass
+
+jitdriver = JitDriver(greens=['pc', 'program', 'bracket_map'], reds=['tape'])
+
 def mainloop(program, bracket_map):
     pc = 0
     tape = Tape()
     
     while pc < len(program):
+        jitdriver.jit_merge_point(pc=pc, 
+				tape=tape, program=program,
+        		bracket_map=bracket_map)
 
         code = program[pc]
 
@@ -23,11 +36,9 @@ def mainloop(program, bracket_map):
             tape.dec()
         
         elif code == ".":
-            # print
             os.write(1, chr(tape.get()))
         
         elif code == ",":
-            # read from stdin
             tape.set(ord(os.read(0, 1)[0]))
 
         elif code == "[" and tape.get() == 0:
@@ -99,6 +110,10 @@ def entry_point(argv):
     
     run(os.open(filename, os.O_RDONLY, 0777))
     return 0
+
+def jitpolicy(driver):
+    from rpython.jit.codewriter.policy import JitPolicy
+    return JitPolicy()
 
 def target(*args):
     return entry_point, None
