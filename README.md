@@ -10,7 +10,7 @@ hg --version
 Ответ не должен содержать сообщения об ошибке. В обратном случае, делаем следующее:
 ```
 sudo apt update
-sudo apt install python3 pypy hg gcc
+sudo apt install python3 pypy gcc
 ```
 ## Скрипты
 Основные скрипты будут написаны в Makefile 
