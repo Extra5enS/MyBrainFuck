@@ -11,7 +11,8 @@ python_only:
 	$(PYTHON) $(SOURCE)/python_only.py $(CODE)/first_brainfuck.b
 
 install_pypy_rpython:
-	hg clone $(PYPY_SOURCE_REPO) pypy
+	git submodule init
+	git submodule update
 
 simple_pypy:
 	mkdir -p build
