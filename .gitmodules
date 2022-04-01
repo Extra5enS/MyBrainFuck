@@ -1,3 +1,0 @@
-[submodule "pypy"]
-	path = pypy
-	url = https://github.com/Extra5enS/pypy.git
