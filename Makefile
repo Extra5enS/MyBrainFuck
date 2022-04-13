@@ -36,14 +36,29 @@ log_jit_pypy:
 
 __with_jit_pypy: export PYPY_USESSION_DIR=$(PWD)/tmp/with_jit
 __with_jit_pypy:
+	mkdir -p tmp/with_jit
 	$(PYPY) $(RPYTHON) -s --opt=jit $(SOURCE)/opt_jit_pypy.py
 
 __without_jit_pypy: export PYPY_USESSION_DIR=$(PWD)/tmp/without_jit
 __without_jit_pypy:
-	$(PYPY) $(RPYTHON) -s --opt=jit --no-pyjitpl $(SOURCE)/opt_jit_pypy.py
+	mkdir -p tmp/without_jit
+	$(PYPY) $(RPYTHON) -s $(SOURCE)/opt_jit_pypy.py
 	
 jit_test: __with_jit_pypy __without_jit_pypy
 
+diff:
+	diff tmp/with_jit/usession-unknown-0/ tmp/without_jit/usession-unknown-0/
 
 rpython-help:
 	$(PYPY) $(RPYTHON) --help
+
+clean_jit_test:
+	rm -rdf tmp/*
+
+viewcode:
+	export PYPYLOG="jit-backend-dump:log" && export PYTHONPATH=`pwd`/pypy
+	cd build && ./log_jit_pypy-c ../brainfuck/mandel.b
+	pypy ./pypy/rpython/jit/backend/tool/viewcode.py ./build/log
+
+clean_viewcode:
+	rm -f log build/log 
