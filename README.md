@@ -77,3 +77,33 @@ cd build
 cat logfile
 ```
 Теперь мы можем анализировать результат работы программы с логами
+
+# ViewCode
+
+Для того чтобы запустить viewcode.py нам необходимы модули `py` и `pygame` для pypy2.7.
+```
+pypy2.7 -m pip install py pygame
+```
+
+Далее установим переменные среды.
+```
+export PYPYLOG=jit-backend-dump:log
+export PYTHONPATH=`pwd`/pypy
+```
+
+Далле сгенерируем транслятор
+```
+make log_jit_pypy
+```
+
+Запускаем его
+```
+cd build
+./log_jit_pypy-c ../brainfuck/mandel.b
+```
+
+Появится файл log, теперь можно сделать `viewcode.py`
+```
+pypy ../pypy/rpython/jit/backend/tool/viewcode.py log
+```
+

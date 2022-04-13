@@ -33,3 +33,17 @@ log_jit_pypy:
 	mkdir -p build
 	$(PYPY) $(RPYTHON) --opt=jit $(SOURCE)/log_jit_pypy.py
 	mv -f log_jit_pypy-c build
+
+__with_jit_pypy: export PYPY_USESSION_DIR=$(PWD)/tmp/with_jit
+__with_jit_pypy:
+	$(PYPY) $(RPYTHON) -s --opt=jit $(SOURCE)/opt_jit_pypy.py
+
+__without_jit_pypy: export PYPY_USESSION_DIR=$(PWD)/tmp/without_jit
+__without_jit_pypy:
+	$(PYPY) $(RPYTHON) -s --opt=jit --no-pyjitpl $(SOURCE)/opt_jit_pypy.py
+	
+jit_test: __with_jit_pypy __without_jit_pypy
+
+
+rpython-help:
+	$(PYPY) $(RPYTHON) --help
