@@ -104,6 +104,7 @@ cd build
 
 Появится файл log, теперь можно сделать `viewcode.py`
 ```
-pypy ../pypy/rpython/jit/backend/tool/viewcode.py log
+cd ..
+pypy pypy/rpython/jit/backend/tool/viewcode.py build/log
 ```
 
