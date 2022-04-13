@@ -82,7 +82,7 @@ cat logfile
 
 Для того чтобы запустить viewcode.py нам необходимы модули `py` и `pygame` для pypy2.7.
 ```
-pypy2.7 -m pip install py pygame
+pypy -m pip install py pygame
 ```
 
 Далее установим переменные среды.
