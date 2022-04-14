@@ -55,10 +55,13 @@ rpython-help:
 clean_jit_test:
 	rm -rdf tmp/*
 
-viewcode:
-	export PYPYLOG="jit-backend-dump:log" && export PYTHONPATH=`pwd`/pypy
+play_log: export PYPYLOG=jit-backend-dump:l.log
+play_log: 
 	cd build && ./log_jit_pypy-c ../brainfuck/mandel.b
-	pypy ./pypy/rpython/jit/backend/tool/viewcode.py ./build/log
+
+viewcode: export PYTHONPATH=$(PWD)/pypy
+viewcode: play_log
+	pypy ./pypy/rpython/jit/backend/tool/viewcode.py ./build/l.log
 
 clean_viewcode:
 	rm -f log build/log 
