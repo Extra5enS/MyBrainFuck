@@ -64,4 +64,9 @@ viewcode: play_log
 	pypy ./pypy/rpython/jit/backend/tool/viewcode.py ./build/l.log
 
 clean_viewcode:
-	rm -f log build/log 
+	rm -f log build/log
+
+funcall: export PYTHONPATH=$(PWD)/pypy
+funcall: export LIBPATH=$(PWD)/source/csource/hlib.so	
+funcall:
+	pypy ./source/csource/funcall.py

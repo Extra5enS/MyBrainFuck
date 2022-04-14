@@ -1,2 +1,6 @@
 /build
 /source/__pycahce__
+*.log
+*.o
+*.os
+/tmp
