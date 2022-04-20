@@ -64,3 +64,8 @@ viewcode: exec_log_jit_pypy
 exec_log_jit_pypy: export PYPYLOG=jit-backend-dump:l.log
 exec_log_jit_pypy: #log_jit_pypy
 	cd build && ./log_jit_pypy-c ../brainfuck/mandel.b
+
+call_c_fun: export PYTHONPATH=$(PWD)/pypy
+call_c_fun:
+	echo $(PYTHONPATH)
+	pypy ./source/csource/call_c_fun.py
