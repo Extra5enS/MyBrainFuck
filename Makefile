@@ -35,7 +35,6 @@ log_jit_pypy:
 	$(PYPY) $(RPYTHON) --opt=jit $(SOURCE)/log_jit_pypy.py
 	mv -f log_jit_pypy-c build
 
-
 #use export PYPY_USESSION_DIR=`pwd`/tmp
 rpython_help:
 	$(PYPY) $(RPYTHON) --help

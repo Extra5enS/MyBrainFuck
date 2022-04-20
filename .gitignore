@@ -1,3 +1,2 @@
-#pypy/
-build/
-source/__pycache__
+/build
+/source/__pycahce__
