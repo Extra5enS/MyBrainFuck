@@ -6,6 +6,7 @@ PYPY_SOURCE_REPO=https://foss.heptapod.net/pypy/pypy
 TRANSLETOR_PATH=pypy/rpython/translator/goal
 RPYTHON=pypy/rpython/bin/rpython
 APT=apt
+#PWD=`pwd`
 
 python_only:
 	$(PYTHON) $(SOURCE)/python_only.py $(CODE)/first_brainfuck.b
@@ -34,27 +35,33 @@ log_jit_pypy:
 	$(PYPY) $(RPYTHON) --opt=jit $(SOURCE)/log_jit_pypy.py
 	mv -f log_jit_pypy-c build
 
-__with_jit_pypy: export PYPY_USESSION_DIR=$(PWD)/tmp/with_jit
-__with_jit_pypy:
-	mkdir -p tmp/with_jit
-	$(PYPY) $(RPYTHON) -s --opt=jit $(SOURCE)/opt_jit_pypy.py
-
-__without_jit_pypy: export PYPY_USESSION_DIR=$(PWD)/tmp/without_jit
-__without_jit_pypy:
-	mkdir -p tmp/without_jit
-	$(PYPY) $(RPYTHON) -s $(SOURCE)/opt_jit_pypy.py
-	
-jit_test: __with_jit_pypy __without_jit_pypy
-
-diff:
-	diff tmp/with_jit/usession-unknown-0/ tmp/without_jit/usession-unknown-0/
-
-rpython-help:
+#use export PYPY_USESSION_DIR=`pwd`/tmp
+rpython_help:
 	$(PYPY) $(RPYTHON) --help
 
-clean_jit_test:
-	rm -rdf tmp/*
+__jit_pypy_with: export PYPY_USESSION_DIR=$(PWD)/tmp/withjit
+__jit_pypy_with:
+	mkdir -p tmp/withjit
+	$(PYPY) $(RPYTHON) -c --opt=jit $(SOURCE)/log_jit_pypy.py
 
+__jit_pypy_without: export PYPY_USESSION_DIR=$(PWD)/tmp/withoutjit
+__jit_pypy_without:
+	mkdir -p tmp/withoutjit
+	$(PYPY) $(RPYTHON) -c --opt=jit --no-pyjitpl $(SOURCE)/log_jit_pypy.py
+
+diff: __jit_pypy_with __jit_pypy_without
+
+diff_dir:
+	diff -r $(PWD)/tmp/withjit/usession-8276b505180f-1/ $(PWD)/tmp/withoutjit/usession-8276b505180f-1/ # > d.diff
+
+clear_diff: 
+	rm -rfd $(PWD)/tmp/withoutjit/ $(PWD)/tmp/withjit
+
+viewcode: export PYTHONPATH=$(PWD)/pypy
+viewcode: exec_log_jit_pypy
+	pypy ./pypy/rpython/jit/backend/tool/viewcode.py ./build/l.log
+
+<<<<<<< HEAD
 play_log: export PYPYLOG=jit-backend-dump:l.log
 play_log: 
 	cd build && ./log_jit_pypy-c ../brainfuck/mandel.b
@@ -83,5 +90,3 @@ fun_jit_pypy:
 	mkdir -p build
 	$(PYPY) $(RPYTHON) --opt=jit $(SOURCE)/fun_jit_pypy.py
 	mv -f log_jit_pypy-c build
-		
-
