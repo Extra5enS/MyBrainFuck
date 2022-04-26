@@ -70,3 +70,18 @@ funcall: export PYTHONPATH=$(PWD)/pypy
 funcall: export LIBPATH=$(PWD)/source/csource/hlib.so	
 funcall:
 	pypy ./source/csource/funcall.py
+
+viewcode_withfun: export PYTHONPATH=$(PWD)/pypy
+viewcode_withfun: play_hellofun
+	pypy ./pypy/rpython/jit/backend/tool/viewcode.py ./build/l.log	
+
+play_hellofun: fun_jit_pypy
+	cd build && ./fun_jit_withfun-c ../brainfuck/hello.b
+
+fun_jit_pypy: export PYPYLOG=jit-backend-dump:l.log
+fun_jit_pypy:
+	mkdir -p build
+	$(PYPY) $(RPYTHON) --opt=jit $(SOURCE)/fun_jit_pypy.py
+	mv -f log_jit_pypy-c build
+		
+

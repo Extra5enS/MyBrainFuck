@@ -1,3 +1,3 @@
 all:
-	gcc -fPIC -c hello.c
-	gcc -shared -o hlib.so hello.o
+	gcc hello.c -fPIC -c
+	gcc hello.o -shared -o hlib.so 
