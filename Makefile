@@ -61,7 +61,6 @@ viewcode: export PYTHONPATH=$(PWD)/pypy
 viewcode: exec_log_jit_pypy
 	pypy ./pypy/rpython/jit/backend/tool/viewcode.py ./build/l.log
 
-<<<<<<< HEAD
 play_log: export PYPYLOG=jit-backend-dump:l.log
 play_log: 
 	cd build && ./log_jit_pypy-c ../brainfuck/mandel.b
