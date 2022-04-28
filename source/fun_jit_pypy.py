@@ -1,10 +1,34 @@
-import rpython.rtyper
-from rpython.rtyper.lltypesystem import rffi, lltype
-from rpython.rlib import rdynload
 import sys
-from rpython.rtyper.lltypesystem.lltype import FuncType, Ptr
+import py
 import os
 from os.path import exists
+
+import rpython.rtyper
+from rpython.rlib.objectmodel import specialize
+from rpython.rlib import rdynload
+from rpython.rtyper.lltypesystem import rffi, lltype
+from rpython.rtyper.lltypesystem.lltype import FuncType, Ptr
+
+@specialize.ll()
+def return_caller(func):
+    source = py.code.Source("""
+    def cpy_call_external(funcptr):
+        # NB. it is essential that no exception checking occurs here!
+        res = funcptr()
+        return res
+    """)
+    miniglobals = {'__name__': __name__}
+
+    exec(source.compile()) in miniglobals
+    call_external_function = miniglobals['cpy_call_external']
+    call_external_function._dont_inline_ = True
+    call_external_function._annspecialcase_ = 'specialize:ll'
+    call_external_function._gctransformer_hint_close_stack_ = True
+
+    def func_exec():
+        return call_external_function(func)
+
+    return func_exec
 
 ll_libname = rffi.str2charp('./source/csource/hlib.so')
 dll = rdynload.dlopen(ll_libname, rdynload._dlopen_default_mode())
@@ -12,6 +36,8 @@ lltype.free(ll_libname, flavor='raw')
 initptr = rdynload.dlsym(dll, 'hello')
 # Ptr and FuncType are from rpython.rtyper.lltypesystem.lltype
 helloFunc = rffi.cast(Ptr(FuncType([], lltype.Void)), initptr)
+
+func_caller = return_caller(helloFunc)
 
 try:
     from rpython.rlib.jit import JitDriver, purefunction
@@ -76,7 +102,6 @@ class Tape(object):
     def __init__(self):
         self.thetape = [0]
         self.position = 0
-        self.helloFunc = helloFunc
 
     def get(self):
         return self.thetape[self.position]
@@ -94,8 +119,8 @@ class Tape(object):
         self.position -= 1
 
     def hello(self):
-        #print('Is lib exists?', exists(lib_path))
-		self.helloFunc()	
+		#print('Is lib exists?', exists(lib_path))
+        func_caller()
 
 def parse(program):
     parsed = []
